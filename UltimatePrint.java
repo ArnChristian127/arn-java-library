@@ -1,113 +1,97 @@
-package arn.library;
-//ultimate print
-//implemented by Arn Chrisian S. Rosales
-//October 11-2024
+//-- Ultimate Print --
+//implemented by Arn Christian S. Rosales
+//10-12-2024
 
-//creating enum to create a unique constant variable function
-enum Define {
-    NewLine, Iter,
-    Array, TwoDimensionArray
+//creating an enum to having a unique function in parameter
+enum Activate {
+    NewLine,
+    Loop,
+    Array
 }
-public class UltimatePrint<T> {
+//main class
+public class UltimatePrint <T> {
+    //make it the main class as an object rather than using Activate
+    public static Activate NewLine = Activate.NewLine;
+    public static Activate Loop = Activate.Loop;
+    public static Activate Array = Activate.Array;
 
-    //creating constant variable
-    public static final Define NEW_LINE = Define.NewLine;
-    public static final Define SET_ITER = Define.Iter;
-    public static final Define SET_ARRAY = Define.Array;
-    public static final Define SET_TWO_DIMENSIONAL_ARRAY = Define.TwoDimensionArray;
+    //-- Function List --
+    //insertPrint (none): no return value and end up with new line
+    //insertPrint (output): returns the output of the data type
+    //insertPrint (output, newline): returns the output of the data type and activate the new line
+    //insertPrint (output, loop, count): returns the output of the datatype, activate the loop
+    //and set a count to activate the second parameter
+    //insertPrint (output, array): returns the output of an Array data type and activate the Array
 
-    //new line without parameter
-    public void Output() {
+    //using an overload method to have multiple parameter in one function
+    public void insertPrint() {
         System.out.println();
     }
-
-    //display the output in parameter 1
-    public void Output(T output) {
+    public void insertPrint(T output) {
         System.out.print(output);
     }
-
-    //define the specific key in second paramter, if not define the main key
-    //it shows the other option that will lead to a not actual error
-    public void Output(T output, Define key) {
-        switch (key) {
-            //check if it define the new line
-            case NewLine:
-                System.out.println(output);
-                break;
-            //otherwise
-            case Iter:
-                System.out.println("[ArnLibrary Error]: Parameter 2 is missing the components for parameter 3 should write int value");
-                break;
-            case Array:
-                System.out.println("[ArnLibrary Error]: Parameter 1 should be '[]' array");
-                break;
-            case TwoDimensionArray:
-                System.out.println("[ArnLibrary Error]: Parameter 1 should be '[][]' two dimensional array");
-                break;
-            default:
-                break;
-        }
-    }
-
-    //if loop was define, should include the 3rd parameter
-    //enter any number as you wish in count
-    public void Output(T output, Define key, int count) {
-        if (key == Define.Iter) {
-            int i = 0;
-            do {
-                System.out.println(output);
-                i++;
+    //the purpose of this one is to keep maintain the error if you put the keyset in first parameter
+    public void insertPrint(Activate keyset) {
+        try {
+            if (
+                (keyset == Activate.NewLine) ||
+                (keyset == Activate.Loop) ||
+                (keyset == Activate.Array)
+            ) {
+                throw new Exception("[Arn-Library Error]: Parameter 1 cannot use this function");
             }
-            while(i < count);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
-
-    public void Output(T[] output, Define key) {
-        switch (key) {
-            //check if it define array
-            case Array:
+    public void insertPrint(T output, Activate keyset) {
+        try {
+            String loopError = "[Arn-Library Error]: Parameter 2 must have parameter 3 to activate this function.";
+            String arrayError = "[Arn-Library Error]: Parameter 2 you must declare an Array datatype.";
+            if (keyset == Activate.NewLine) {
+                System.out.println(output);
+            } else if (keyset == Activate.Loop) {
+                throw new Exception(loopError);
+            } else if (keyset == Activate.Array) {
+                throw new Exception(arrayError);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void insertPrint(T output, Activate keyset, int count) {
+        try {
+            String arrayError = "[Arn-Library Error]: Parameter 2 you must declare an Array datatype.";
+            String newLineError = "[Arn-Library Error]: Parameter 2 cannot use this function when enabling a Loop.";
+            if (keyset == Activate.Loop) {
+                for (int i = 0; i < count; i++) {
+                    System.out.println(output);
+                }
+            } else if (keyset == Activate.Array) {
+                throw new Exception(arrayError);
+            } else if (keyset == Activate.NewLine) {
+                throw new Exception(newLineError);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void insertPrint(Activate keyset, T...output) {
+        String newLineError = "[Arn-Library Error]: Parameter 2 cannot use this function when enabling a Array.";
+        String loopError = "[Arn-Library Error]: Parameter 2 cannot use this when its already iterated";
+        try {
+            if (keyset == Activate.Array) {
                 for (int i = 0; i < output.length; i++) {
                     System.out.print(output[i] + " ");
                 }
                 System.out.println();
-                break;
-            //otherwise
-            case NewLine:
-                System.out.println("[ArnLibrary Error]: Unable to use this");
-                break;
-            case Iter:
-                System.out.println("[ArnLibrary Error]: Unable to use loop");
-                break;
-            case TwoDimensionArray:
-                System.out.println("[ArnLibrary Error]: Parameter 1 should be '[][]' to perform two dimensional array");
-                break;
-            default:
-                break;
-        }
-    }
-    
-    public void Output(T[][] output, Define key) {
-        switch (key) {
-            //check if it define the two dimensional array
-            case TwoDimensionArray:
-            for (int i = 0; i < output.length; i++) {
-                for (int j = 0; j < output[i].length; j++) {
-                    System.out.print(output[i][j] + " ");
-                }
-                System.out.println();
+            } else if (keyset == Activate.Array) {
+                throw new Exception(newLineError);
+            } else if (keyset == Activate.NewLine) {
+                throw new Exception(loopError);
             }
-            //otherwise
-            case NewLine:
-                System.out.println("[ArnLibrary Error]: Unable to use this");
-                break;
-            case Iter:
-                System.out.println("[ArnLibrary Error]: Unable to use loop");
-                break;
-            case Array:
-                System.out.println("[ArnLibrary Error]: Parameter 1 should be '[]' to perform array");
-                break;
-            default:
-                break;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 }
